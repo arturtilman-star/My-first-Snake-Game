@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnakeGame</title>
+</head>
+<body>
+    <style>
+        body {
+            margin: 0;
+            background: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        #score {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        canvas {
+            background: #222;
+            border: 3px solid white;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        /* Kontrol untuk HP */
+.mobile-controls {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.mobile-controls button {
+    width: 65px;
+    height: 55px;
+    margin: 0;
+    padding: 0;
+    font-size: 28px;
+    border: 2px solid white;
+    border-radius: 10px;
+    background: #333;
+    color: white;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.mobile-controls .middle {
+    display: flex;
+    gap: 8px;
+}
+
+.mobile-controls button:active {
+    transform: scale(0.9);
+    background: #555;
+}
+    </style>
+</head>
+<body>
+
+    <h1>🐍 Snake Game</h1>
+
+    <div id="score">Score: 0</div>
+
+    <canvas id="game" width="500" height="500"></canvas>
+    canvas {
+    background: #222;
+    border: 3px solid white;
+    max-width: 90vw;
+    height: auto;
+}
+
+    <br>
+
+    <button onclick="restartGame()">Restart</button>
+<div class="mobile-controls">
+
+    <button onclick="changeDirection('up')">▲</button>
+
+    <div class="middle">
+        <button onclick="changeDirection('left')">◀</button>
+
+        <button onclick="changeDirection('down')">▼</button>
+
+        <button onclick="changeDirection('right')">▶</button>
+    </div>
+
+</div>
+<script>
+
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const box = 25;
+const size = canvas.width / box;
+
+let snake;
+let food;
+let direction;
+let score;
+let game;
+
+// Memulai game
+function restartGame() {
+
+    snake = [
+        { x: 10, y: 10 },
+        { x: 9, y: 10 },
+        { x: 8, y: 10 }
+    ];
+
+    direction = "right";
+
+    score = 0;
+
+    document.getElementById("score").innerText =
+        "Score: " + score;
+
+    createFood();
+
+    clearInterval(game);
+
+    game = setInterval(gameLoop, 120);
+}
+
+
+// Membuat makanan
+function createFood() {
+
+    food = {
+        x: Math.floor(Math.random() * size),
+        y: Math.floor(Math.random() * size)
+    };
+
+}
+
+
+// Kontrol keyboard
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "ArrowUp" && direction !== "down") {
+        direction = "up";
+    }
+
+    if (event.key === "ArrowDown" && direction !== "up") {
+        direction = "down";
+    }
+
+    if (event.key === "ArrowLeft" && direction !== "right") {
+        direction = "left";
+    }
+
+    if (event.key === "ArrowRight" && direction !== "left") {
+        direction = "right";
+    }
+
+});
+<div class="mobile-controls">
+
+    <button onclick="changeDirection('up')">▲</button>
+
+    <div class="middle">
+        <button onclick="changeDirection('left')">◀</button>
+
+        <button onclick="changeDirection('down')">▼</button>
+
+        <button onclick="changeDirection('right')">▶</button>
+    </div>
+
+</div>
+
+// Gerakan ular
+function moveSnake() {
+
+    let head = {
+        x: snake[0].x,
+        y: snake[0].y
+    };
+
+
+    if (direction === "up") {
+        head.y--;
+    }
+
+    if (direction === "down") {
+        head.y++;
+    }
+
+    if (direction === "left") {
+        head.x--;
+    }
+
+    if (direction === "right") {
+        head.x++;
+    }
+
+
+    // Tabrak dinding
+    if (
+        head.x < 0 ||
+        head.x >= size ||
+        head.y < 0 ||
+        head.y >= size
+    ) {
+        gameOver();
+        return;
+    }
+
+
+    // Tabrak tubuh sendiri
+    for (let i = 0; i < snake.length; i++) {
+
+        if (
+            head.x === snake[i].x &&
+            head.y === snake[i].y
+        ) {
+            gameOver();
+            return;
+        }
+
+    }
+
+
+    snake.unshift(head);
+
+
+    // Makan makanan
+    if (
+        head.x === food.x &&
+        head.y === food.y
+    ) {
+
+        score++;
+
+        document.getElementById("score").innerText =
+            "Score: " + score;
+
+        createFood();
+
+    } else {
+
+        snake.pop();
+
+    }
+
+}
+
+
+// Menggambar game
+function drawGame() {
+
+    ctx.fillStyle = "#222";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    // Makanan
+    ctx.fillStyle = "lime";
+
+    ctx.fillRect(
+        food.x * box,
+        food.y * box,
+        box,
+        box
+    );
+
+
+    // Ular
+    snake.forEach(function(part, index) {
+
+        if (index === 0) {
+            ctx.fillStyle = "white";
+        } else {
+            ctx.fillStyle = "#aaa";
+        }
+
+        ctx.fillRect(
+            part.x * box,
+            part.y * box,
+            box - 2,
+            box - 2
+        );
+
+    });
+
+}
+
+
+// Game loop
+function gameLoop() {
+
+    moveSnake();
+
+    drawGame();
+
+}
+
+
+// Game Over
+function gameOver() {
+
+    clearInterval(game);
+
+    ctx.fillStyle = "rgba(0,0,0,0.7)";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.fillStyle = "white";
+
+    ctx.textAlign = "center";
+
+    ctx.font = "40px Arial";
+
+    ctx.fillText(
+        "GAME OVER",
+        canvas.width / 2,
+        canvas.height / 2
+    );
+
+}
+
+
+// Jalankan game
+restartGame();
+
+</script>
+</body>
+</html>
