@@ -3,10 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnakeGame</title>
+    <title>Snake Game</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <style>
+    <!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Snake Game</title>
+
+    <style>.controls {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.controls button {
+    width: 60px;
+    height: 50px;
+    margin: 3px;
+    font-size: 24px;
+    border: none;
+    border-radius: 10px;
+    background: #333;
+    color: white;
+}
+
+.controls button:active {
+    background: #555;
+}
         body {
             margin: 0;
             background: #111;
@@ -16,89 +43,69 @@
         }
 
         h1 {
+            margin-top: 20px;
             margin-bottom: 5px;
         }
 
         #score {
             font-size: 24px;
-            margin-bottom: 15px;
+            margin: 10px;
         }
 
         canvas {
             background: #222;
             border: 3px solid white;
+            display: block;
+            margin: auto;
         }
 
-        button {
-            margin-top: 15px;
-            padding: 10px 20px;
+        /* TOMBOL RESTART */
+        #restart {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 30px;
+            background: #00aa00;
+            color: white;
+            border: none;
+            border-radius: 8px;
             font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
         }
-        /* Kontrol untuk HP */
-.mobile-controls {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-}
 
-.mobile-controls button {
-    width: 65px;
-    height: 55px;
-    margin: 0;
-    padding: 0;
-    font-size: 28px;
-    border: 2px solid white;
-    border-radius: 10px;
-    background: #333;
-    color: white;
-    cursor: pointer;
-    touch-action: manipulation;
-}
-
-.mobile-controls .middle {
-    display: flex;
-    gap: 8px;
-}
-
-.mobile-controls button:active {
-    transform: scale(0.9);
-    background: #555;
-}
+        #restart:hover {
+            background: #00cc00;
+        }
     </style>
 </head>
+
 <body>
 
     <h1>🐍 Snake Game</h1>
 
-    <div id="score">Score: 0</div>
+    <div id="score">
+        Score: 0
+    </div>
 
     <canvas id="game" width="500" height="500"></canvas>
-    canvas {
-    background: #222;
-    border: 3px solid white;
-    max-width: 90vw;
-    height: auto;
-}
 
-    <br>
+    <!-- TOMBOL RESTART -->
+     <div class="controls">
 
-    <button onclick="restartGame()">Restart</button>
-<div class="mobile-controls">
+    <button onclick="changeDirection('up')">⬆️</button>
 
-    <button onclick="changeDirection('up')">▲</button>
-
-    <div class="middle">
-        <button onclick="changeDirection('left')">◀</button>
-
-        <button onclick="changeDirection('down')">▼</button>
-
-        <button onclick="changeDirection('right')">▶</button>
+    <div>
+        <button onclick="changeDirection('left')">⬅️</button>
+        <button onclick="changeDirection('down')">⬇️</button>
+        <button onclick="changeDirection('right')">➡️</button>
     </div>
 
 </div>
+    <button id="restart" onclick="restartGame()">
+        RESTART
+    </button>
+
+
 <script>
 
 const canvas = document.getElementById("game");
@@ -113,7 +120,11 @@ let direction;
 let score;
 let game;
 
-// Memulai game
+
+/* =========================
+   RESTART GAME
+========================= */
+
 function restartGame() {
 
     snake = [
@@ -137,7 +148,10 @@ function restartGame() {
 }
 
 
-// Membuat makanan
+/* =========================
+   MEMBUAT MAKANAN
+========================= */
+
 function createFood() {
 
     food = {
@@ -148,7 +162,10 @@ function createFood() {
 }
 
 
-// Kontrol keyboard
+/* =========================
+   KEYBOARD
+========================= */
+
 document.addEventListener("keydown", function(event) {
 
     if (event.key === "ArrowUp" && direction !== "down") {
@@ -168,21 +185,12 @@ document.addEventListener("keydown", function(event) {
     }
 
 });
-<div class="mobile-controls">
 
-    <button onclick="changeDirection('up')">▲</button>
 
-    <div class="middle">
-        <button onclick="changeDirection('left')">◀</button>
+/* =========================
+   GERAK ULAR
+========================= */
 
-        <button onclick="changeDirection('down')">▼</button>
-
-        <button onclick="changeDirection('right')">▶</button>
-    </div>
-
-</div>
-
-// Gerakan ular
 function moveSnake() {
 
     let head = {
@@ -208,26 +216,32 @@ function moveSnake() {
     }
 
 
-    // Tabrak dinding
+    /* Tabrak dinding */
+
     if (
         head.x < 0 ||
         head.x >= size ||
         head.y < 0 ||
         head.y >= size
     ) {
+
         gameOver();
+
         return;
     }
 
 
-    // Tabrak tubuh sendiri
+    /* Tabrak tubuh */
+
     for (let i = 0; i < snake.length; i++) {
 
         if (
             head.x === snake[i].x &&
             head.y === snake[i].y
         ) {
+
             gameOver();
+
             return;
         }
 
@@ -237,7 +251,8 @@ function moveSnake() {
     snake.unshift(head);
 
 
-    // Makan makanan
+    /* Makan makanan */
+
     if (
         head.x === food.x &&
         head.y === food.y
@@ -259,8 +274,13 @@ function moveSnake() {
 }
 
 
-// Menggambar game
+/* =========================
+   GAMBAR GAME
+========================= */
+
 function drawGame() {
+
+    /* Background */
 
     ctx.fillStyle = "#222";
 
@@ -272,24 +292,30 @@ function drawGame() {
     );
 
 
-    // Makanan
+    /* Makanan */
+
     ctx.fillStyle = "lime";
 
     ctx.fillRect(
         food.x * box,
         food.y * box,
-        box,
-        box
+        box - 2,
+        box - 2
     );
 
 
-    // Ular
+    /* Ular */
+
     snake.forEach(function(part, index) {
 
         if (index === 0) {
+
             ctx.fillStyle = "white";
+
         } else {
-            ctx.fillStyle = "#aaa";
+
+            ctx.fillStyle = "#999";
+
         }
 
         ctx.fillRect(
@@ -304,7 +330,10 @@ function drawGame() {
 }
 
 
-// Game loop
+/* =========================
+   GAME LOOP
+========================= */
+
 function gameLoop() {
 
     moveSnake();
@@ -314,7 +343,10 @@ function gameLoop() {
 }
 
 
-// Game Over
+/* =========================
+   GAME OVER
+========================= */
+
 function gameOver() {
 
     clearInterval(game);
@@ -343,9 +375,16 @@ function gameOver() {
 }
 
 
-// Jalankan game
+/* =========================
+   MULAI GAME
+========================= */
+
 restartGame();
 
 </script>
+
+</body>
+</html>
+    
 </body>
 </html>
