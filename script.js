@@ -127,5 +127,36 @@ function changeDirection(newDirection) {
     if (newDirection === "right" && direction !== "left") {
         direction = "right";
     }
+document.getElementById("up").addEventListener("click", function() {
+    changeDirection("up");
+});
 
+document.getElementById("down").addEventListener("click", function() {
+    changeDirection("down");
+});
+
+document.getElementById("left").addEventListener("click", function() {
+    changeDirection("left");
+});
+
+document.getElementById("right").addEventListener("click", function() {
+    changeDirection("right");
+});
 }
+// TOMBOL HP
+
+document.getElementById("up").addEventListener("click", function() {
+    changeDirection("up");
+});
+
+document.getElementById("down").addEventListener("click", function() {
+    changeDirection("down");
+});
+
+document.getElementById("left").addEventListener("click", function() {
+    changeDirection("left");
+});
+
+document.getElementById("right").addEventListener("click", function() {
+    changeDirection("right");
+});
